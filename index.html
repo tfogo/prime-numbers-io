@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Prime ℕumberζ</title>
+  <link rel="icon" href="/images/zetaicon.png" type="image/x-icon">
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<main>
+  <div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+      <br><br>
+      <div class="row center">
+        <h1 id="logo-container" href="#" class="brand-logo pink-text lighten-1" ><img src="/images/Zeta_polar.svg"/> Prime ℕumberζ</h1>
+      </div>
+      <div class="row center">
+        <h5 class="header col s12 light">Ever wanted a phone number which is also a prime number?</h5>
+        <h5 class="header col s12 light">Search for prime number phone numbers available on Twilio.</h5>
+        <h5 class="header col s12 light">Be the envy of your friends thanks to the coolest internet prime number search!<sup>*</sup></h5>
+        <small>
+          *Great Internet Mersenne Prime Search excluded of course
+        </small>
+      </div>
+      <br><br>
+    </div>
+  </div>
+
+
+  <div class="container" id="app">
+    <div class="section">
+
+
+      <form class="col s12" v-on:submit.prevent="fetchData">
+        <div class="row">
+          <div class="input-field col s12 m6">
+            <select class="icons browser-default" v-model="options.isoCountry">
+              <option v-for="country in countries" v-bind:value="country.isoCode" class="left">{{country.name}}, {{country.code}}</option>
+            </select>
+          </div>
+          <div v-if="options.isoCountry == 'US' || options.isoCountry == 'CA'" class="input-field col s12 m6">
+            <input placeholder="Area Code" class="icons" v-model="options.areaCode" maxlength=3 pattern="\d{3}" validate>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 m6">
+            <input value="search" type="submit" class="pink lighten-1 waves-effect waves-light btn">
+          </div>
+        </div>
+      </form>
+
+      <!--   Icon Section   -->
+      <div class="row">
+        <table class="">
+          <thead>
+            <tr>
+                <th>Number</th>
+                <th>Voice</th>
+                <th>SMS</th>
+                <th>MMS</th>
+                <th>View on Twilio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="phoneNumber in phoneNumbers">
+              <td>{{phoneNumber.friendlyName}}</td>
+              <td>
+                <i class="material-icons" v-if="phoneNumber.capabilities.voice">
+                  call
+                </i>
+              </td>
+              <td>
+                <i class="material-icons" v-if="phoneNumber.capabilities.SMS">
+                  textsms
+                </i>
+              </td>
+              <td>
+                <i class="material-icons" v-if="phoneNumber.capabilities.MMS">
+                  speaker_notes
+                </i>
+              </td>
+              <td>
+                <a v-bind:href="phoneNumber.link" class="pink-text text-lighten-1">View</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row">
+        <div class="col s12 m12 center">
+          <p v-if="phoneNumbers.length == 0 && !loading">
+            No results. Seaching for numbers outside the US? Try a few more times. It can take several searches to find primes from some countries.
+          </p>
+          <div v-if="loading" class="preloader-wrapper active">
+            <div class="spinner-layer spinner-pink-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+     </div>
+
+    </div>
+    <br><br>
+
+    <div class="section">
+
+    </div>
+  </div>
+</main>
+  <footer class="page-footer pink">
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <a class="pink-text text-lighten-3" href="http://github.com/tfogo">Tim Fogarty</a> using <a class="pink-text text-lighten-3" href="https://www.twilio.com/docs/api/rest/available-phone-numbers">Twilio API</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="/js/countries.js"></script>
+  <script src="/js/index.js"></script>
+  </body>
+</html>
