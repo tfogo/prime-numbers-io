@@ -15,6 +15,16 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+// if searching for phone numbers outside the US in the "buy number" UI,
+// we need to cut off the country code
+function makePhoneNumberSearchable(phoneNumber) {
+  if (phoneNumber.isoCountry === 'US') {
+    return phoneNumber.friendlyName;
+  }
+
+  return phoneNumber.friendlyName.slice(countries[phoneNumber.isoCountry].code.length);
+}
+
 function getPrimePhoneNumbers(isoCountry, areaCode) {
 
   let promises = [];
@@ -38,7 +48,8 @@ function getPrimePhoneNumbers(isoCountry, areaCode) {
       twilioObject.available_phone_numbers.forEach(e => {
         if (primality(e.phone_number.slice(countries[isoCountry].code.length)) && !verifiedPrimes.includes(e.phone_number.slice(countries[isoCountry].code.length))) {
           console.log(e.phone_number);
-          e.link = `https://www.twilio.com/console/phone-numbers/search/buy/results?Country=${isoCountry}&searchType=number&searchTerm=${e.friendlyName}`;
+          const searchablePhoneNumber = makePhoneNumberSearchable(e);
+          e.link = `https://www.twilio.com/console/phone-numbers/search/buy/results?Country=${isoCountry}&searchType=number&searchTerm=${searchablePhoneNumber}`;
           verifiedPrimes.push(e);
         }
       })
